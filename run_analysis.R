@@ -26,4 +26,14 @@ levels(data_subset$Activity_Label) <- c("Walking", "Walking Upstairs", "Walking 
 
 ####
 ## Step 5: Creates a second, independent tidy data set with the average of each variable for each activity and each subject. 
+tidy <- data.frame(matrix(rep(NA,180), nrow=180, ncol=81))
+colnames(tidy) <- colnames(data_subset)
+starter <- aggregate(data_subset[,3], by=list(data_subset$Subject_ID,data_subset$Activity_Label), mean)
+tidy[,1:2] <- starter[,1:2]
+for(i in seq(3:180)){
+  tidy[,i] <- aggregate(data_subset[,i], by=list(data_subset$Subject_ID,data_subset$Activity_Label), mean)[[3]]
+}
 
+tidy[,2] <- aggregate(data_subset[,3], by=list(data_subset$Subject_ID,data_subset$Activity_Label), mean)[[2]]
+
+write.csv(tidy, file = "~/GitHub/Getting_and_Cleaning_Data-Peer_Review_Project/tidy.txt")
